@@ -48,11 +48,30 @@ async function playGame(move) {
 
     try {
         // Створення гри на контракті
-        await contract.methods.createGame(moveHash).send({
+        const tx = await contract.methods.createGame(moveHash).send({
             from: accounts[0],
             value: web3.utils.toWei(betAmount.toString(), "ether")
         });
+        
+        console.log("Transaction successful:", tx);
         document.getElementById("status").innerText = `Game created with bet: ${betAmount} ETH`;
+
+        // Оновлений спосіб прослуховування події після транзакції
+        contract.once('GameRevealed', {
+            filter: { player: accounts[0] },
+            fromBlock: 'latest'
+        }, (error, event) => {
+            if (error) {
+                console.error(error);
+                document.getElementById("status").innerText = "Error while revealing game result.";
+            } else {
+                // Перевірка і виведення результату гри
+                const result = event.returnValues.result; // "You Win", "You Lose", "Draw"
+                console.log(`Game result: ${result}`);
+                document.getElementById("status").innerText = `Game result: ${result}`;
+            }
+        });
+
     } catch (error) {
         console.error(error);
         document.getElementById("status").innerText = "Error occurred during game creation!";
@@ -76,15 +95,18 @@ async function playAgainstBot() {
 
     try {
         // Створення гри з ботом
-        await contract.methods.createGame(moveHash).send({
+        const tx = await contract.methods.createGame(moveHash).send({
             from: accounts[0],
             value: web3.utils.toWei(betAmount.toString(), "ether")
         });
         
         document.getElementById("status").innerText = `You played against bot with bet: ${betAmount} ETH`;
 
-        // Прослуховування події GameRevealed для отримання результату гри
-        contract.events.GameRevealed({ filter: { player: accounts[0] } }, function(error, event) {
+        // Оновлений спосіб прослуховування події після транзакції
+        contract.once('GameRevealed', {
+            filter: { player: accounts[0] },
+            fromBlock: 'latest'
+        }, (error, event) => {
             if (error) {
                 console.error(error);
                 document.getElementById("status").innerText = "Error while revealing game result.";
@@ -95,6 +117,7 @@ async function playAgainstBot() {
                 document.getElementById("status").innerText = `Game result: ${result}`;
             }
         });
+
     } catch (error) {
         console.error(error);
         document.getElementById("status").innerText = "Error occurred during bot game creation!";
