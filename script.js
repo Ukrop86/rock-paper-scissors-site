@@ -1,3 +1,10 @@
+// Перевірка на наявність Web3
+if (typeof Web3 !== 'undefined') {
+    console.log("Web3 is available!");
+} else {
+    console.log("Web3 is not available. Make sure you have MetaMask or a similar extension installed.");
+}
+
 let web3;
 let contract;
 
@@ -19,7 +26,6 @@ async function connectWallet() {
         alert("No Ethereum wallet detected. Install MetaMask or OKX Wallet.");
     }
 }
-
 
 async function playGame(move) {
     if (!contract) {
