@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/4.0.0/web3.min.js"></script>
+</head>
+<body>
+    <h1>Rock Paper Scissors on Monad</h1>
+    
+    <button id="connectWallet">🔗 Connect Wallet</button>
+    
+    <div id="game">
+        <h2>Choose your move:</h2>
+        <button onclick="playGame(1)">✊ Rock</button>
+        <button onclick="playGame(2)">✋ Paper</button>
+        <button onclick="playGame(3)">✌ Scissors</button>
+    </div>
+    
+    <div id="status"></div>
+
+    <script src="contract.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
