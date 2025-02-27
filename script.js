@@ -89,7 +89,7 @@ async function playAgainstBot() {
                 console.error(error);
                 document.getElementById("status").innerText = "Error while revealing game result.";
             } else {
-                // Виведення результату гри
+                // Перевірка і виведення результату гри
                 const result = event.returnValues.result; // "You Win", "You Lose", "Draw"
                 console.log(`Game result: ${result}`);
                 document.getElementById("status").innerText = `Game result: ${result}`;
@@ -100,6 +100,7 @@ async function playAgainstBot() {
         document.getElementById("status").innerText = "Error occurred during bot game creation!";
     }
 }
+
 
 // Функція для отримання коштів з крана
 async function claimFaucet() {
