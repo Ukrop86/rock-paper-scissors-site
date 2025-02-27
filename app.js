@@ -118,13 +118,13 @@ async function getContractBalance() {
     document.getElementById('contractBalance').innerText = etherBalance;
 }
 
-// Функція для ставлення ставки
-// Функція для отримання результату гри
+// Функція для відображення результату гри
 async function showGameResult() {
     try {
         const result = await contract.methods.getGameResult(account).call();
         document.getElementById('gameResult').innerText = `Результат гри: ${result}`;
 
+        // Зміна кольору в залежності від результату гри
         if (result === "Win") {
             document.getElementById('gameResult').style.color = "green";
         } else if (result === "Loss") {
@@ -140,7 +140,7 @@ async function showGameResult() {
     }
 }
 
-// Оновлення ставок: кнопки не зникають
+// Функція для розміщення ставки та запуску гри
 async function placeBet(choice) {
     const betAmount = document.getElementById('betAmount').value;
     if (betAmount <= 0 || !account) {
@@ -150,13 +150,14 @@ async function placeBet(choice) {
 
     const weiAmount = web3.utils.toWei(betAmount, 'ether');
     try {
+        // Розміщення ставки
         await contract.methods.placeBet(choice).send({
             from: account,
             value: weiAmount
         });
         document.getElementById('bettingResult').innerText = 'Ставка зроблена успішно!';
         
-        // Автоматично запускаємо гру після ставки
+        // Запуск гри після ставки
         await startGame();
     } catch (error) {
         alert('Сталася помилка при ставці!');
@@ -166,13 +167,14 @@ async function placeBet(choice) {
 // Функція для запуску гри
 async function startGame() {
     try {
+        // Ігра починається, після того як ставка зроблена
         await contract.methods.playGame(account).send({ from: account });
+        // Показуємо результат гри
         await showGameResult();
     } catch (error) {
         alert('Сталася помилка при запуску гри!');
     }
 }
-
 
 // Функція для виведення коштів з контракту
 async function withdrawFromContract(amount) {
