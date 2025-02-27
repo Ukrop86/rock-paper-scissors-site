@@ -81,44 +81,68 @@ let contract;
 let account;
 
 window.onload = async function() {
-    if (window.ethereum) {
+    // Перевірка, чи підтримує браузер Web3
+    if (typeof window.ethereum !== 'undefined') {
+        // Якщо підтримується, ініціалізація Web3
         web3 = new Web3(window.ethereum);
+
+        // Підключення до контракту
         contract = new web3.eth.Contract(ABI, CONTRACT_ADDRESS);
-
-        document.getElementById('connectWalletBtn').onclick = async function() {
-            await connectWallet();
-        };
-
-        document.getElementById('withdrawBtn').onclick = async function() {
-            const amount = document.getElementById('withdrawAmount').value;
-            if (amount <= 0 || !account) {
-                alert('Будь ласка, введіть суму для виведення!');
-                return;
-            }
-            await withdrawFromContract(amount);
-        };
+        
+        // Перевірка, чи вже є підключений гаманець
+        const accounts = await web3.eth.getAccounts();
+        if (accounts.length > 0) {
+            account = accounts[0];
+            document.getElementById('walletInfo').innerText = `Підключено: ${account}`;
+            document.getElementById('wallet-section').classList.add('hidden');
+            document.getElementById('betting-section').classList.remove('hidden');
+            document.getElementById('contract-balance-section').classList.remove('hidden');
+            await getContractBalance();
+        }
     } else {
-        alert('Будь ласка, встановіть MetaMask!');
+        alert('Гаманець не знайдено! Встановіть MetaMask або інший Web3 гаманець.');
     }
+
+    // Кнопка підключення гаманця
+    document.getElementById('connectWalletBtn').onclick = async function() {
+        try {
+            await connectWallet();
+        } catch (error) {
+            alert('Помилка підключення гаманця!');
+        }
+    };
+
+    // Обробка кнопки виведення коштів
+    document.getElementById('withdrawBtn').onclick = async function() {
+        const amount = document.getElementById('withdrawAmount').value;
+        if (amount <= 0 || !account) {
+            alert('Будь ласка, введіть суму для виведення!');
+            return;
+        }
+        await withdrawFromContract(amount);
+    };
 };
 
+// Функція для підключення до гаманця
 async function connectWallet() {
-    const accounts = await web3.eth.requestAccounts();
+    // Запит на підключення гаманця через MetaMask або інший Web3 гаманець
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     account = accounts[0];
     document.getElementById('walletInfo').innerText = `Підключено: ${account}`;
     document.getElementById('wallet-section').classList.add('hidden');
-    document.getElementById('betting-section').classList.remove('hidden'); // Показуємо кнопки вибору ставки
+    document.getElementById('betting-section').classList.remove('hidden');
     document.getElementById('contract-balance-section').classList.remove('hidden');
     await getContractBalance();
 }
 
+// Функція для отримання балансу контракту
 async function getContractBalance() {
     const balance = await contract.methods.contractBalance().call();
     const etherBalance = web3.utils.fromWei(balance, 'ether');
     document.getElementById('contractBalance').innerText = etherBalance;
 }
 
-// Функція для ставлення ставки
+// Функція для створення ставки
 async function placeBet(choice) {
     const betAmount = document.getElementById('betAmount').value;
     if (betAmount <= 0 || !account) {
@@ -183,3 +207,4 @@ async function withdrawFromContract(amount) {
         alert('Сталася помилка при виведенні!');
     }
 }
+
