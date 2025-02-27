@@ -119,6 +119,28 @@ async function getContractBalance() {
 }
 
 // Функція для ставлення ставки
+// Функція для отримання результату гри
+async function showGameResult() {
+    try {
+        const result = await contract.methods.getGameResult(account).call();
+        document.getElementById('gameResult').innerText = `Результат гри: ${result}`;
+
+        if (result === "Win") {
+            document.getElementById('gameResult').style.color = "green";
+        } else if (result === "Loss") {
+            document.getElementById('gameResult').style.color = "red";
+        } else {
+            document.getElementById('gameResult').style.color = "gray";
+        }
+
+        // Оновлюємо баланс контракту
+        await getContractBalance();
+    } catch (error) {
+        alert('Сталася помилка при отриманні результату гри!');
+    }
+}
+
+// Оновлення ставок: кнопки не зникають
 async function placeBet(choice) {
     const betAmount = document.getElementById('betAmount').value;
     if (betAmount <= 0 || !account) {
@@ -151,26 +173,6 @@ async function startGame() {
     }
 }
 
-// Функція для отримання результату гри
-async function showGameResult() {
-    try {
-        const result = await contract.methods.getGameResult(account).call();
-        document.getElementById('gameResult').innerText = `Результат гри: ${result}`;
-
-        if (result === "Win") {
-            document.getElementById('gameResult').style.color = "green";
-        } else if (result === "Loss") {
-            document.getElementById('gameResult').style.color = "red";
-        } else {
-            document.getElementById('gameResult').style.color = "gray";
-        }
-
-        // Оновлюємо баланс контракту
-        await getContractBalance();
-    } catch (error) {
-        alert('Сталася помилка при отриманні результату гри!');
-    }
-}
 
 // Функція для виведення коштів з контракту
 async function withdrawFromContract(amount) {
