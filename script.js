@@ -98,35 +98,37 @@ async function playAgainstBot() {
 
     const betAmount = document.getElementById("betAmount").value || 0.01; // Вибір ставки
     const move = prompt("Choose your move (Rock, Paper, Scissors):");
-    const moveHash = web3.utils.keccak256(move); // Генерація хешу для руху гравця
+
+    // Перетворення текстового вибору на числове значення
+    let moveValue;
+    if (move === "Rock") {
+        moveValue = 1; // Rock = 1
+    } else if (move === "Paper") {
+        moveValue = 2; // Paper = 2
+    } else if (move === "Scissors") {
+        moveValue = 3; // Scissors = 3
+    } else {
+        alert("Invalid move! Please choose Rock, Paper, or Scissors.");
+        return;
+    }
+
+    // Генерація хешу для руху гравця
+    const moveHash = web3.utils.keccak256(moveValue.toString());
     console.log(`Move chosen: ${move}, Move hash: ${moveHash}`);
 
     const accounts = await web3.eth.getAccounts();
 
     try {
         // Створення гри з ботом
-        const tx = await contract.methods.createGame(moveHash).send({
+        await contract.methods.createGame(moveHash).send({
             from: accounts[0],
             value: web3.utils.toWei(betAmount.toString(), "ether")
         });
-
+        
         document.getElementById("status").innerText = `You played against bot with bet: ${betAmount} ETH`;
 
-        // Додайте виклик revealGame для відкриття гри
-        const secret = prompt("Enter your secret phrase to reveal your move:");
-
-        const resultTx = await contract.methods.revealGame(move, secret).send({
-            from: accounts[0]
-        });
-
-        console.log("Game revealed:", resultTx);
-        document.getElementById("status").innerText = `Revealed game result. Please check the status.`;
-
-        // Прослуховування події для отримання результату гри
-        contract.once('GameRevealed', {
-            filter: { player: accounts[0] },
-            fromBlock: 'latest'
-        }, (error, event) => {
+        // Прослуховування події GameRevealed для отримання результату гри
+        contract.events.GameRevealed({ filter: { player: accounts[0] } }, function(error, event) {
             if (error) {
                 console.error(error);
                 document.getElementById("status").innerText = "Error while revealing game result.";
@@ -137,12 +139,12 @@ async function playAgainstBot() {
                 document.getElementById("status").innerText = `Game result: ${result}`;
             }
         });
-
     } catch (error) {
         console.error(error);
         document.getElementById("status").innerText = "Error occurred during bot game creation!";
     }
 }
+
 
 // Функція для отримання коштів з крана
 async function claimFaucet() {
