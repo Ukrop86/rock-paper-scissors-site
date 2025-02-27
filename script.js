@@ -10,6 +10,7 @@ let contract;
 
 async function connectWallet() {
     if (window.ethereum) {
+        // Перевірка на MetaMask або інші Ethereum-гаманці (наприклад, OKX)
         console.log("Ethereum wallet detected");
         web3 = new Web3(window.ethereum);
         try {
@@ -22,8 +23,20 @@ async function connectWallet() {
             console.error("Error requesting accounts: ", error);
             document.getElementById("status").innerText = "Connection failed!";
         }
+    } else if (window.solana && window.solana.isPhantom) {
+        // Перевірка на Phantom
+        console.log("Phantom wallet detected");
+        // Для Solana використовуємо Web3.js через спеціальну бібліотеку Solana
+        const solana = window.solana;
+        try {
+            const accounts = await solana.connect();
+            document.getElementById("status").innerText = `Connected: ${accounts.publicKey.toString()}`;
+        } catch (error) {
+            console.error("Error connecting Phantom: ", error);
+            document.getElementById("status").innerText = "Connection failed!";
+        }
     } else {
-        alert("No Ethereum wallet detected. Install MetaMask or OKX Wallet.");
+        alert("No supported wallet detected. Please install MetaMask, OKX Wallet, or Phantom.");
     }
 }
 
@@ -49,3 +62,4 @@ async function playGame(move) {
 }
 
 document.getElementById("connectWallet").addEventListener("click", connectWallet);
+
