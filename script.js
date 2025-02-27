@@ -3,16 +3,23 @@ let contract;
 
 async function connectWallet() {
     if (window.ethereum) {
+        console.log("Ethereum wallet detected");
         web3 = new Web3(window.ethereum);
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const accounts = await web3.eth.getAccounts();
-        document.getElementById("status").innerText = `Connected: ${accounts[0]}`;
-        
-        contract = new web3.eth.Contract(contractABI, contractAddress);
+        try {
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            const accounts = await web3.eth.getAccounts();
+            document.getElementById("status").innerText = `Connected: ${accounts[0]}`;
+            
+            contract = new web3.eth.Contract(contractABI, contractAddress);
+        } catch (error) {
+            console.error("Error requesting accounts: ", error);
+            document.getElementById("status").innerText = "Connection failed!";
+        }
     } else {
         alert("No Ethereum wallet detected. Install MetaMask or OKX Wallet.");
     }
 }
+
 
 async function playGame(move) {
     if (!contract) {
