@@ -41,6 +41,19 @@ const ABI = [
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
 ];
 
@@ -55,6 +68,15 @@ window.onload = async function() {
 
         document.getElementById('connectWalletBtn').onclick = async function() {
             await connectWallet();
+        };
+
+        document.getElementById('withdrawBtn').onclick = async function() {
+            const amount = document.getElementById('withdrawAmount').value;
+            if (amount <= 0 || !account) {
+                alert('Будь ласка, введіть суму для виведення!');
+                return;
+            }
+            await withdrawFromContract(amount);
         };
     } else {
         alert('Будь ласка, встановіть MetaMask!');
@@ -77,6 +99,7 @@ async function getContractBalance() {
     document.getElementById('contractBalance').innerText = etherBalance;
 }
 
+// Функція для ставлення ставки
 async function placeBet(choice) {
     const betAmount = document.getElementById('betAmount').value;
     if (betAmount <= 0 || !account) {
@@ -99,6 +122,7 @@ async function placeBet(choice) {
     }
 }
 
+// Функція для початку нової гри
 async function startNewGame() {
     try {
         await contract.methods.playGame(account).send({ from: account });
@@ -106,5 +130,19 @@ async function startNewGame() {
         document.getElementById('startNewGameBtn').disabled = true;
     } catch (error) {
         alert('Сталася помилка при запуску гри!');
+    }
+}
+
+// Функція для виведення коштів з контракту
+async function withdrawFromContract(amount) {
+    const weiAmount = web3.utils.toWei(amount.toString(), 'ether');
+    try {
+        await contract.methods.withdraw(weiAmount).send({
+            from: account
+        });
+        alert(`Виведено ${amount} ETH з контракту!`);
+        await getContractBalance(); // Оновлення балансу контракту
+    } catch (error) {
+        alert('Сталася помилка при виведенні!');
     }
 }
