@@ -94,7 +94,6 @@ async function claimFaucet() {
     const accounts = await web3.eth.getAccounts();
 
     try {
-        // Виклик функції для крана з контракту
         await contract.methods.claimFaucet().send({
             from: accounts[0]
         });
