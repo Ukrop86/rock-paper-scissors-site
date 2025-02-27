@@ -25,6 +25,7 @@
                 <button class="choice-btn" onclick="placeBet(0)">Камінь</button>
                 <button class="choice-btn" onclick="placeBet(1)">Папір</button>
                 <button class="choice-btn" onclick="placeBet(2)">Ножиці</button>
+                
             </div>
             <p id="bettingResult"></p>
         </div>
@@ -39,7 +40,7 @@
         <div id="contract-balance-section" class="hidden">
             <h3>Баланс контракту: <span id="contractBalance"></span> ETH</h3>
             <!-- Виведення коштів -->
-        <div id="withdraw-section" class="hidden">
+        <div id="withdraw-section">
             <h3>Вивести кошти з контракту</h3>
             <input type="number" id="withdrawAmount" placeholder="Введіть суму для виведення (ETH)">
             <button id="withdrawBtn">Вивести</button>
