@@ -8,21 +8,50 @@
 
     <!-- Підключаємо Web3.js через CDN -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-
 </head>
 <body>
     <h1>Rock Paper Scissors on Monad</h1>
     
+    <!-- Кнопка підключення гаманця -->
     <button id="connectWallet">🔗 Connect Wallet</button>
-    
+
+    <!-- Поле для вибору ставки -->
+    <div>
+        <label for="betAmount">Choose your bet:</label>
+        <input type="number" id="betAmount" min="0.01" step="0.01" value="0.01" />
+    </div>
+
+    <!-- Кнопка гри з ботом -->
+    <button onclick="playAgainstBot()">Play Against Bot</button>
+
+    <!-- Кнопка для отримання коштів з крана -->
+    <button onclick="claimFaucet()">Claim Faucet</button>
+
+    <!-- Механізм гри -->
     <div id="game">
         <h2>Choose your move:</h2>
         <button onclick="playGame(1)">✊ Rock</button>
         <button onclick="playGame(2)">✋ Paper</button>
         <button onclick="playGame(3)">✌ Scissors</button>
     </div>
-    
+
+    <!-- Статус гри -->
     <div id="status"></div>
+
+    <!-- Лідерборд -->
+    <div id="leaderboard">
+        <h2>Leaderboard</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Player</th>
+                    <th>Winnings</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboardData"></tbody>
+        </table>
+    </div>
 
     <!-- Ваші скрипти -->
     <script src="contract.js"></script> <!-- Підключаємо файл з ABI контракту -->
