@@ -101,8 +101,6 @@ async function playAgainstBot() {
     }
 }
 
-
-
 // Функція для отримання коштів з крана
 async function claimFaucet() {
     console.log("Claiming faucet...");
@@ -123,37 +121,6 @@ async function claimFaucet() {
         document.getElementById("status").innerText = "Error occurred during faucet claim!";
     }
 }
-
-// Оновлення лідерборду
-async function updateLeaderboard() {
-    console.log("Updating leaderboard...");
-    if (!contract) {
-        alert("Connect wallet first!");
-        return;
-    }
-
-    try {
-        const leaderboard = await contract.methods.getLeaderboard().call(); // Отримання лідерборду з контракту
-        const leaderboardTable = document.getElementById("leaderboardData");
-        leaderboardTable.innerHTML = ''; // Очищуємо попередні дані
-
-        leaderboard.forEach((player, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${player[0]}</td>
-                <td>${web3.utils.fromWei(player[1], 'ether')} ETH</td>
-            `;
-            leaderboardTable.appendChild(row);
-        });
-    } catch (error) {
-        console.error(error);
-        document.getElementById("status").innerText = "Error fetching leaderboard!";
-    }
-}
-
-// Оновлення лідерборду через певний інтервал
-setInterval(updateLeaderboard, 5000);
 
 // Подія для підключення гаманця
 document.getElementById("connectWallet").addEventListener("click", connectWallet);
