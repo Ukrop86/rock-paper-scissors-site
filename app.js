@@ -107,7 +107,7 @@ async function connectWallet() {
     account = accounts[0];
     document.getElementById('walletInfo').innerText = `Підключено: ${account}`;
     document.getElementById('wallet-section').classList.add('hidden');
-    document.getElementById('betting-section').classList.remove('hidden');
+    document.getElementById('betting-section').classList.remove('hidden'); // Показуємо кнопки вибору ставки
     document.getElementById('contract-balance-section').classList.remove('hidden');
     await getContractBalance();
 }
@@ -118,29 +118,7 @@ async function getContractBalance() {
     document.getElementById('contractBalance').innerText = etherBalance;
 }
 
-// Функція для відображення результату гри
-async function showGameResult() {
-    try {
-        const result = await contract.methods.getGameResult(account).call();
-        document.getElementById('gameResult').innerText = `Результат гри: ${result}`;
-
-        // Зміна кольору в залежності від результату гри
-        if (result === "Win") {
-            document.getElementById('gameResult').style.color = "green";
-        } else if (result === "Loss") {
-            document.getElementById('gameResult').style.color = "red";
-        } else {
-            document.getElementById('gameResult').style.color = "gray";
-        }
-
-        // Оновлюємо баланс контракту
-        await getContractBalance();
-    } catch (error) {
-        alert('Сталася помилка при отриманні результату гри!');
-    }
-}
-
-// Функція для розміщення ставки та запуску гри
+// Функція для ставлення ставки
 async function placeBet(choice) {
     const betAmount = document.getElementById('betAmount').value;
     if (betAmount <= 0 || !account) {
@@ -150,14 +128,11 @@ async function placeBet(choice) {
 
     const weiAmount = web3.utils.toWei(betAmount, 'ether');
     try {
-        // Розміщення ставки
         await contract.methods.placeBet(choice).send({
             from: account,
             value: weiAmount
         });
         document.getElementById('bettingResult').innerText = 'Ставка зроблена успішно!';
-        
-        // Запуск гри після ставки
         await startGame();
     } catch (error) {
         alert('Сталася помилка при ставці!');
@@ -167,12 +142,31 @@ async function placeBet(choice) {
 // Функція для запуску гри
 async function startGame() {
     try {
-        // Ігра починається, після того як ставка зроблена
         await contract.methods.playGame(account).send({ from: account });
-        // Показуємо результат гри
         await showGameResult();
     } catch (error) {
         alert('Сталася помилка при запуску гри!');
+    }
+}
+
+// Функція для отримання результату гри
+async function showGameResult() {
+    try {
+        const result = await contract.methods.getGameResult(account).call();
+        document.getElementById('gameResult').innerText = `Результат гри: ${result}`;
+
+        if (result === "Win") {
+            document.getElementById('gameResult').style.color = "green";
+        } else if (result === "Loss") {
+            document.getElementById('gameResult').style.color = "red";
+        } else {
+            document.getElementById('gameResult').style.color = "gray";
+        }
+
+        // Оновлення балансу контракту
+        await getContractBalance();
+    } catch (error) {
+        alert('Сталася помилка при отриманні результату гри!');
     }
 }
 
