@@ -101,7 +101,6 @@ async function playAgainstBot() {
     }
 }
 
-
 // Функція для отримання коштів з крана
 async function claimFaucet() {
     console.log("Claiming faucet...");
