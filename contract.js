@@ -1,15 +1,30 @@
-const contractAddress = "0xd9145CCE52D386f254917e481eB44e9943F39138"; // Твій контракт
+const contractAddress = "0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8"; // Твій контракт
 const contractABI = [
+	{
+		"inputs": [],
+		"name": "claimFaucet",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "_moveHash",
+				"type": "bytes32"
+			}
+		],
+		"name": "createGame",
+		"outputs": [],
+		"stateMutability": "payable",
+		"type": "function"
+	},
 	{
 		"inputs": [
 			{
 				"internalType": "address",
 				"name": "_feeRecipient",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "_treasury",
 				"type": "address"
 			}
 		],
@@ -86,35 +101,28 @@ const contractABI = [
 		"type": "event"
 	},
 	{
-		"anonymous": false,
 		"inputs": [
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "player",
-				"type": "address"
+				"internalType": "enum RockPaperScissors.Move",
+				"name": "_move",
+				"type": "uint8"
 			},
 			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "_secret",
+				"type": "string"
 			}
 		],
-		"name": "PrizeDistributed",
-		"type": "event"
+		"name": "revealGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "MIN_BET",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
+		"name": "withdraw",
+		"outputs": [],
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -134,33 +142,6 @@ const contractABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "claimFaucet",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "_moveHash",
-				"type": "bytes32"
-			}
-		],
-		"name": "createGame",
-		"outputs": [],
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "distributePrizes",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -238,19 +219,6 @@ const contractABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [],
-		"name": "getLeaderboard",
-		"outputs": [
-			{
-				"internalType": "address[]",
-				"name": "",
-				"type": "address[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -270,19 +238,13 @@ const contractABI = [
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "MIN_BET",
+		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"name": "leaderboard",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -312,63 +274,6 @@ const contractABI = [
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "enum RockPaperScissors.Move",
-				"name": "_move",
-				"type": "uint8"
-			},
-			{
-				"internalType": "string",
-				"name": "_secret",
-				"type": "string"
-			}
-		],
-		"name": "revealGame",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "treasury",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"name": "winnings",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ];
