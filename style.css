@@ -51,3 +51,8 @@ input {
 #connectWalletBtn:hover {
     background-color: #218838;
 }
+
+.hidden {
+    display: none;
+}
+
