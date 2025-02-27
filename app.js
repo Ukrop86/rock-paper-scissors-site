@@ -54,6 +54,19 @@ const ABI = [
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getGameResult",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
     }
 ];
 
@@ -125,9 +138,16 @@ async function placeBet(choice) {
 // Функція для початку нової гри
 async function startNewGame() {
     try {
+        // Запуск гри
         await contract.methods.playGame(account).send({ from: account });
-        document.getElementById('gameResult').innerText = 'Гра завершена!';
+
+        // Отримуємо результат гри
+        const gameResult = await contract.methods.getGameResult().call();
+
+        // Виводимо результат гри
+        document.getElementById('gameResult').innerText = `Результат гри: ${gameResult}`;
         document.getElementById('startNewGameBtn').disabled = true;
+        document.getElementById('game-result-section').classList.remove('hidden');  // Показуємо результат гри
     } catch (error) {
         alert('Сталася помилка при запуску гри!');
     }
