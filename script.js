@@ -52,11 +52,21 @@ async function playGame(move) {
             from: accounts[0],
             value: web3.utils.toWei(betAmount.toString(), "ether")
         });
-        
-        console.log("Transaction successful:", tx);
+
+        console.log("Game created:", tx);
         document.getElementById("status").innerText = `Game created with bet: ${betAmount} ETH`;
 
-        // Оновлений спосіб прослуховування події після транзакції
+        // Додайте виклик revealGame (наприклад, використовуємо "секрет" для підтвердження)
+        const secret = prompt("Enter your secret phrase to reveal your move:");
+
+        const resultTx = await contract.methods.revealGame(move, secret).send({
+            from: accounts[0]
+        });
+
+        console.log("Game revealed:", resultTx);
+        document.getElementById("status").innerText = `Revealed game result. Please check the status.`;
+
+        // Прослуховування події для отримання результату гри
         contract.once('GameRevealed', {
             filter: { player: accounts[0] },
             fromBlock: 'latest'
@@ -99,10 +109,20 @@ async function playAgainstBot() {
             from: accounts[0],
             value: web3.utils.toWei(betAmount.toString(), "ether")
         });
-        
+
         document.getElementById("status").innerText = `You played against bot with bet: ${betAmount} ETH`;
 
-        // Оновлений спосіб прослуховування події після транзакції
+        // Додайте виклик revealGame для відкриття гри
+        const secret = prompt("Enter your secret phrase to reveal your move:");
+
+        const resultTx = await contract.methods.revealGame(move, secret).send({
+            from: accounts[0]
+        });
+
+        console.log("Game revealed:", resultTx);
+        document.getElementById("status").innerText = `Revealed game result. Please check the status.`;
+
+        // Прослуховування події для отримання результату гри
         contract.once('GameRevealed', {
             filter: { player: accounts[0] },
             fromBlock: 'latest'
