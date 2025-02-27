@@ -1,4 +1,3 @@
-// Перевірка на наявність Web3
 if (typeof Web3 !== 'undefined') {
     console.log("Web3 is available!");
 } else {
@@ -10,7 +9,6 @@ let contract;
 
 async function connectWallet() {
     if (window.ethereum) {
-        // Перевірка на MetaMask або інші Ethereum-гаманці
         console.log("Ethereum wallet detected");
         web3 = new Web3(window.ethereum);
         try {
@@ -19,6 +17,7 @@ async function connectWallet() {
             document.getElementById("status").innerText = `Connected: ${accounts[0]}`;
             
             contract = new web3.eth.Contract(contractABI, contractAddress); // контракт ABI та адресу
+            console.log("Contract initialized:", contract);
         } catch (error) {
             console.error("Error requesting accounts: ", error);
             document.getElementById("status").innerText = "Connection failed!";
@@ -29,6 +28,7 @@ async function connectWallet() {
 }
 
 async function playGame(move) {
+    console.log(`Play game with move: ${move}`);
     if (!contract) {
         alert("Connect wallet first!");
         return;
@@ -44,6 +44,7 @@ async function playGame(move) {
     }
 
     const moveHash = web3.utils.keccak256(move.toString()); // Генерація хешу вибраного ходу
+    console.log(`Generated moveHash: ${moveHash}`);
 
     try {
         // Створення гри на контракті
@@ -60,6 +61,7 @@ async function playGame(move) {
 
 // Функція для гри з ботом
 async function playAgainstBot() {
+    console.log("Playing against bot...");
     if (!contract) {
         alert("Connect wallet first!");
         return;
@@ -68,6 +70,7 @@ async function playAgainstBot() {
     const betAmount = document.getElementById("betAmount").value || 0.01; // Вибір ставки
     const move = prompt("Choose your move (Rock, Paper, Scissors):");
     const moveHash = web3.utils.keccak256(move); // Генерація хешу для руху гравця
+    console.log(`Move chosen: ${move}, Move hash: ${moveHash}`);
 
     const accounts = await web3.eth.getAccounts();
 
@@ -86,6 +89,7 @@ async function playAgainstBot() {
 
 // Функція для отримання коштів з крана
 async function claimFaucet() {
+    console.log("Claiming faucet...");
     if (!contract) {
         alert("Connect wallet first!");
         return;
@@ -106,6 +110,7 @@ async function claimFaucet() {
 
 // Оновлення лідерборду
 async function updateLeaderboard() {
+    console.log("Updating leaderboard...");
     if (!contract) {
         alert("Connect wallet first!");
         return;
@@ -144,6 +149,15 @@ document.getElementById("playBot").addEventListener("click", playAgainstBot);
 document.getElementById("claimFaucet").addEventListener("click", claimFaucet);
 
 // Подія для вибору ходу в грі
-document.getElementById("playRock").addEventListener("click", () => playGame(1));
-document.getElementById("playPaper").addEventListener("click", () => playGame(2));
-document.getElementById("playScissors").addEventListener("click", () => playGame(3));
+document.getElementById("playRock").addEventListener("click", () => {
+    console.log("Rock button clicked");
+    playGame(1);
+});
+document.getElementById("playPaper").addEventListener("click", () => {
+    console.log("Paper button clicked");
+    playGame(2);
+});
+document.getElementById("playScissors").addEventListener("click", () => {
+    console.log("Scissors button clicked");
+    playGame(3);
+});
