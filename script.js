@@ -83,13 +83,13 @@ async function playAgainstBot() {
         
         document.getElementById("status").innerText = `You played against bot with bet: ${betAmount} ETH`;
 
-        // Очікуємо результат гри після того, як завершиться транзакція
+        // Прослуховування події GameRevealed для отримання результату гри
         contract.events.GameRevealed({ filter: { player: accounts[0] } }, function(error, event) {
             if (error) {
                 console.error(error);
                 document.getElementById("status").innerText = "Error while revealing game result.";
             } else {
-                // Виведення результату гри (виграш чи програш)
+                // Виведення результату гри
                 const result = event.returnValues.result; // "You Win", "You Lose", "Draw"
                 console.log(`Game result: ${result}`);
                 document.getElementById("status").innerText = `Game result: ${result}`;
