@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rock Paper Scissors</title>
     <link rel="stylesheet" href="style.css">
-
     <!-- Підключаємо Web3.js через CDN -->
     <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
 </head>
@@ -22,17 +21,17 @@
     </div>
 
     <!-- Кнопка гри з ботом -->
-    <button onclick="playAgainstBot()">Play Against Bot</button>
+    <button id="playBot">Play Against Bot</button>
 
     <!-- Кнопка для отримання коштів з крана -->
-    <button onclick="claimFaucet()">Claim Faucet</button>
+    <button id="claimFaucet">Claim Faucet</button>
 
     <!-- Механізм гри -->
     <div id="game">
         <h2>Choose your move:</h2>
-        <button onclick="playGame(1)">✊ Rock</button>
-        <button onclick="playGame(2)">✋ Paper</button>
-        <button onclick="playGame(3)">✌ Scissors</button>
+        <button id="playRock">✊ Rock</button>
+        <button id="playPaper">✋ Paper</button>
+        <button id="playScissors">✌ Scissors</button>
     </div>
 
     <!-- Статус гри -->
